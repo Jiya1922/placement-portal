@@ -2,44 +2,108 @@
 
 {% block content %}
 
-<h2>Welcome, {{ name }}</h2>
+<div class="row">
+    <div class="mb-4">
 
+    <h2>Welcome, {{ session['user_name'] }}</h2>
+
+    <p class="text-muted">
+        Track your preparation progress and placement activities.
+    </p>
+
+</div>
+
+    <div class="col-md-3">
+
+        <div class="card p-3">
+
+            <h5>Resume Uploaded</h5>
+
+            <h2>1</h2>
+
+            <div class="card-details">
+
+                <hr>
+
+                <p>Status : Uploaded</p>
+
+                <p>Profile Completion : 60%</p>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width:60%"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card p-3">
+
+            <h5>Interview Posts</h5>
+
+            <h2>0</h2>
+
+            <div class="card-details">
+
+                <hr>
+
+                <p>No posts yet</p>
+
+                <p>Share interview experiences</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card p-3">
+
+            <h5>Aptitude Tests</h5>
+
+            <h2>0</h2>
+
+            <div class="card-details">
+
+                <hr>
+
+                <p>Average Score : 0%</p>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width:0%"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="row mt-4">
 
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h5>Aptitude Tests</h5>
-                <h2>0</h2>
-            </div>
-        </div>
-    </div>
+    <div class="col-md-8">
 
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h5>Average Score</h5>
-                <h2>0%</h2>
-            </div>
-        </div>
-    </div>
+        <div class="card p-3">
 
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h5>Resume Uploaded</h5>
-                <h2>No</h2>
-            </div>
-        </div>
-    </div>
+            <h4>Recent Activity</h4>
 
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h5>Interview Posts</h5>
-                <h2>0</h2>
-            </div>
+            <hr>
+
+            <ul>
+                <li>Resume uploaded successfully</li>
+                <li>Profile created</li>
+                <li>Ready for aptitude practice</li>
+            </ul>
+
         </div>
+
     </div>
 
 </div>

@@ -2,18 +2,50 @@
 
 {% block content %}
 
-<h2>Upload Resume</h2>
+<h2 class="page-title">Resume Manager</h2>
 
-<form method="POST" enctype="multipart/form-data">
+<p class="text-muted">
+    Upload and manage your latest resume.
+</p>
 
-    <input type="file" name="resume" required>
+<div class="resume-card">
 
-    <br><br>
+    <h4>Upload Resume</h4>
 
-    <button class="btn btn-primary">
-        Upload Resume
-    </button>
+    <p class="text-muted">
+        Upload your latest resume for placements and internships.
+    </p>
 
-</form>
+    <form method="POST" enctype="multipart/form-data">
 
+        <input type="file"
+               name="resume"
+               class="form-control">
+
+        <button type="submit"
+                class="btn btn-primary upload-btn">
+            Upload Resume
+        </button>
+
+    </form>
+
+</div>
+
+<div class="status-card mt-4">
+
+    <h4>Resume Status</h4>
+
+    <hr>
+
+    <p>✓ Resume Uploaded</p>
+
+    <p>Profile Completion : 60%</p>
+
+    <div class="progress">
+        <div class="progress-bar"
+             style="width:60%">
+        </div>
+    </div>
+
+</div>
 {% endblock %}
