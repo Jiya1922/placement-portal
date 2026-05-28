@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+
+    <h2>Test Result</h2>
+
+    <hr>
+
+    <h3>
+        Score: {{ score }}/{{ total }}
+    </h3>
+
+    <a href="/dashboard"
+       class="btn btn-success mt-3">
+       Back to Dashboard
+    </a>
+
+</div>
+
+{% endblock %}

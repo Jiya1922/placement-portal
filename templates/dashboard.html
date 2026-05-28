@@ -3,13 +3,17 @@
 {% block content %}
 
 <div class="row">
-    <div class="mb-4">
+   <div class="mb-4">
 
     <h2>Welcome, {{ session['user_name'] }}</h2>
 
     <p class="text-muted">
         Track your preparation progress and placement activities.
     </p>
+
+</div>
+
+<div class="row">
 
 </div>
 
@@ -45,7 +49,7 @@
 
             <h5>Interview Posts</h5>
 
-            <h2>0</h2>
+            <h2>{{ total_posts }}</h2>
 
             <div class="card-details">
 
@@ -67,16 +71,18 @@
 
             <h5>Aptitude Tests</h5>
 
-            <h2>0</h2>
+            <h2>{{ total_tests }}</h2>
 
             <div class="card-details">
 
                 <hr>
 
-                <p>Average Score : 0%</p>
+                <p>Average Score : {{ average_score }}%</p>
 
                 <div class="progress">
-                    <div class="progress-bar" style="width:0%"></div>
+                    <div class="progress-bar"
+     style="width:{{ average_score }}%">
+</div>
                 </div>
 
             </div>
@@ -101,6 +107,34 @@
                 <li>Profile created</li>
                 <li>Ready for aptitude practice</li>
             </ul>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="row mt-4">
+
+    <div class="col-md-6">
+
+        <div class="card p-3">
+
+            <h4>Profile Summary</h4>
+
+            <hr>
+
+            <p><strong>Name:</strong> {{ session['user_name'] }}</p>
+
+            <p><strong>Status:</strong> Active</p>
+
+            <p><strong>Profile Completion:</strong></p>
+
+            <div class="progress">
+    <div class="progress-bar"
+     style="width: {{ average_score | string }}%;">
+</div>
+</div>
+            </div>
 
         </div>
 

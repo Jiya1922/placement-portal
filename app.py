@@ -70,11 +70,54 @@ def dashboard():
     if 'user_id' not in session:
         return redirect('/login')
 
-    return render_template(
-        'dashboard.html',
-        name=session['user_name']
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='jiyanna@2006',
+        database='placement_portal',
+        cursorclass=pymysql.cursors.DictCursor
     )
 
+    cursor = conn.cursor()
+
+    # Interview posts count
+    cursor.execute(
+        "SELECT COUNT(*) AS total_posts FROM interview_posts WHERE user_id=%s",
+        (session['user_id'],)
+    )
+
+    posts = cursor.fetchone()
+
+    # Aptitude tests count
+    cursor.execute(
+        "SELECT COUNT(*) AS total_tests FROM test_results WHERE user_id=%s",
+        (session['user_id'],)
+    )
+
+    tests = cursor.fetchone()
+
+    # Average score
+    cursor.execute(
+        """
+        SELECT AVG(score*100/total_questions) AS average_score
+        FROM test_results
+        WHERE user_id=%s
+        """,
+        (session['user_id'],)
+    )
+
+    average = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'dashboard.html',
+        name=session['user_name'],
+        total_posts=posts['total_posts'],
+        total_tests=tests['total_tests'],
+        average_score=round(average['average_score'] or 0)
+    )
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
 
@@ -107,8 +150,131 @@ def logout():
     session.clear()
     return redirect('/login')    
 
+@app.route('/aptitude')
+def aptitude():
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='jiyanna@2006',
+        database='placement_portal',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM aptitude_questions")
+
+    questions = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'aptitude.html',
+        questions=questions
+    )
+
+@app.route('/submit_test', methods=['POST'])
+def submit_test():
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='jiyanna@2006',
+        database='placement_portal',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM aptitude_questions")
+
+    questions = cursor.fetchall()
+
+    score = 0
+
+    for q in questions:
+
+        selected = request.form.get(f"q{q['id']}")
+
+        if selected == q['correct_answer']:
+            score += 1
+
+    cursor.execute(
+        """
+        INSERT INTO test_results
+        (user_id, score, total_questions)
+        VALUES (%s, %s, %s)
+        """,
+        (
+            session['user_id'],
+            score,
+            len(questions)
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'result.html',
+        score=score,
+        total=len(questions)
+    )
+
+@app.route('/interview_posts', methods=['GET', 'POST'])
+def interview_posts():
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='jiyanna@2006',
+        database='placement_portal',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+
+        company = request.form['company']
+        role = request.form['role']
+        experience = request.form['experience']
+
+        sql = """
+        INSERT INTO interview_posts
+        (user_id, company_name, role, experience)
+        VALUES (%s, %s, %s, %s)
+        """
+
+        cursor.execute(
+            sql,
+            (
+                session['user_id'],
+                company,
+                role,
+                experience
+            )
+        )
+
+        conn.commit()
+
+    cursor.execute(
+        "SELECT * FROM interview_posts ORDER BY created_at DESC"
+    )
+
+    posts = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'interview_posts.html',
+        posts=posts
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-   

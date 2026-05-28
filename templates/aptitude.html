@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Aptitude Practice</h2>
+
+<p class="text-muted">
+    Practice quantitative and logical questions.
+</p>
+
+<form method="POST" action="/submit_test">
+
+{% for q in questions %}
+
+<div class="card p-3 mb-3">
+
+    <h5>{{ q.question }}</h5>
+
+    <div>
+        <input type="radio" name="q{{ q.id }}" value="{{ q.option1 }}">
+        {{ q.option1 }}
+    </div>
+
+    <div>
+        <input type="radio" name="q{{ q.id }}" value="{{ q.option2 }}">
+        {{ q.option2 }}
+    </div>
+
+    <div>
+        <input type="radio" name="q{{ q.id }}" value="{{ q.option3 }}">
+        {{ q.option3 }}
+    </div>
+
+    <div>
+        <input type="radio" name="q{{ q.id }}" value="{{ q.option4 }}">
+        {{ q.option4 }}
+    </div>
+
+</div>
+
+{% endfor %}
+
+<button class="btn btn-primary">
+    Submit Test
+</button>
+
+</form>
+
+{% endblock %}
