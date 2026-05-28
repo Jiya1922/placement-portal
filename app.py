@@ -17,7 +17,7 @@ db = pymysql.connect(
 
 @app.route('/')
 def home():
-    return '<h1>Placement & Internship Preparation Portal</h1><a href="/register">Register</a>'
+    return render_template('home.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -276,5 +276,65 @@ def interview_posts():
         posts=posts
     )
 
+@app.route('/coding_practice')
+def coding_practice():
+
+    questions = [
+
+        {
+            'title': 'Two Sum',
+            'difficulty': 'Easy'
+        },
+
+        {
+            'title': 'Binary Search',
+            'difficulty': 'Easy'
+        },
+
+        {
+            'title': 'Longest Substring Without Repeating Characters',
+            'difficulty': 'Medium'
+        },
+
+        {
+            'title': 'Merge Intervals',
+            'difficulty': 'Medium'
+        }
+    ]
+
+    return render_template(
+        'coding_practice.html',
+        questions=questions
+    )
+@app.route('/profile')
+def profile():
+
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='jiyanna@2006',
+        database='placement_portal',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM users WHERE id=%s",
+        (session['user_id'],)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'profile.html',
+        user=user
+    )
 if __name__ == '__main__':
     app.run(debug=True)
