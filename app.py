@@ -20,7 +20,7 @@ except:
 
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return render_template('home.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -47,79 +47,27 @@ def register():
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
 
-        cursor = db.cursor()
-        cursor.execute("SELECT id, name, email, password_hash FROM users WHERE email=%s", (email,))
-        user = cursor.fetchone()
+        session['user_id'] = 1
+        session['user_name'] = "Demo User"
 
-        if user and check_password_hash(user[3], password):
-            # Save user info in session
-            session['user_id'] = user[0]
-            session['user_name'] = user[1]
-            return redirect('/dashboard')
-        else:
-            return "Invalid email or password"
+        return redirect('/dashboard')
 
     return render_template('login.html')
 
-
-# Dashboard route
 @app.route('/dashboard')
 def dashboard():
 
     if 'user_id' not in session:
         return redirect('/login')
 
-    conn = pymysql.connect(
-        host='localhost',
-        user='root',
-        password='jiyanna@2006',
-        database='placement_portal',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-
-    cursor = conn.cursor()
-
-    # Interview posts count
-    cursor.execute(
-        "SELECT COUNT(*) AS total_posts FROM interview_posts WHERE user_id=%s",
-        (session['user_id'],)
-    )
-
-    posts = cursor.fetchone()
-
-    # Aptitude tests count
-    cursor.execute(
-        "SELECT COUNT(*) AS total_tests FROM test_results WHERE user_id=%s",
-        (session['user_id'],)
-    )
-
-    tests = cursor.fetchone()
-
-    # Average score
-    cursor.execute(
-        """
-        SELECT AVG(score*100/total_questions) AS average_score
-        FROM test_results
-        WHERE user_id=%s
-        """,
-        (session['user_id'],)
-    )
-
-    average = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
     return render_template(
         'dashboard.html',
-        name=session['user_name'],
-        total_posts=posts['total_posts'],
-        total_tests=tests['total_tests'],
-        average_score=round(average['average_score'] or 0)
+        total_posts=2,
+        total_tests=3,
+        average_score=75
     )
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
