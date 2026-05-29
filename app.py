@@ -8,16 +8,19 @@ app = Flask(__name__)
 app.secret_key = "placement_portal_secret_key"
 UPLOAD_FOLDER = 'uploads/resumes'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-db = pymysql.connect(
-    host="localhost",
-    user="root",
-    password="jiyanna@2006",
-    database="placement_portal"
-)
+try:
+    db = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="jiyanna@2006",
+        database="placement_portal"
+    )
+except:
+    db = None
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
